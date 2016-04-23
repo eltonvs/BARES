@@ -13,10 +13,31 @@
 
 
 #include <iostream>
+#include <fstream>
+#include <string>
 #include "headers.hpp"
 
 int main(int argc, char const *argv[]) {
-    // Code Here
+    std::ifstream input;
+    std::ofstream output;
+
+    if (argc > 2) {
+        input.open("data/" + std::string(argv[1]));
+        output.open("data/" + std::string(argv[2]));
+    } else {
+        std::cerr << "No file specified. Finishing execution.\n";
+        return EXIT_FAILURE;
+    }
+
+    // Verify if the files aren't opened
+    if (!input.is_open() || !output.is_open()) {
+        std::cerr << "The file specified cannot be opened.\n";
+        return EXIT_FAILURE;
+    }
+
+    // Close Opened files
+    input.close();
+    output.close();
 
     return EXIT_SUCCESS;
 }
