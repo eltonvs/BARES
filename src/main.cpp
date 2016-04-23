@@ -11,11 +11,10 @@
  *  File with the main function
  */
 
-
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "headers.hpp"
+#include "stack.hpp"
 
 int main(int argc, char const *argv[]) {
     std::ifstream input;
