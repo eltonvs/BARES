@@ -1,6 +1,6 @@
 /*!
  *  @mainpage BARES
- *  @authors Elton de Souza Vieira
+ *  @author Elton de Souza Vieira
  *  @date April, 2016
  *  @copyright Copyright &copy; 2016. All rights reserved.
  *  @version 1.0
@@ -16,6 +16,11 @@
 #include <string>
 #include "stack.hpp"
 
+/**
+ * @brief Main function
+ *
+ * The main function, used to execute everything.
+ */
 int main(int argc, char const *argv[]) {
     std::ifstream input;
     std::ofstream output;
