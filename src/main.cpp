@@ -13,8 +13,10 @@
 
 #include <iostream>
 #include <fstream>
+#include <cassert>
 #include <string>
 #include "stack.hpp"
+#include "queue.hpp"
 
 /**
  * @brief Main function

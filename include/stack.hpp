@@ -1,9 +1,9 @@
 /*!
  *  @file stack.hpp
- *  @brief Class Headers
+ *  @brief Stack Class Header
  *  @copyright Copyright &copy; 2016. All rights reserved.
  *
- *  File with all Class Headers and prototypes
+ *  File with the Stack Class header
  */
 
 #ifndef _stack_hpp_
