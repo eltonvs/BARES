@@ -52,6 +52,11 @@ bool Stack<Object>::top(Object &_returned) const {
 }
 
 template <typename Object>
+unsigned Stack<Object>::size() const {
+    return m_top;
+}
+
+template <typename Object>
 bool Stack<Object>::isEmpty() const {
     return m_top == 0;
 }

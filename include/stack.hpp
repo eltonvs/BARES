@@ -54,6 +54,12 @@ class Stack {
     bool top(Object &_return) const;
 
     /**
+     * @brief Get the Stack size
+     * @return A unsigned int with the Stack size
+     */
+    unsigned size() const;
+
+    /**
      * @brief Verify if the Stack is Empty
      * @return True if the Stack is Empty, False if not
      */
