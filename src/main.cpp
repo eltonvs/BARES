@@ -17,6 +17,8 @@
 #include <string>
 #include "stack.hpp"
 #include "queue.hpp"
+#include "terms.hpp"
+#include "expression.hpp"
 
 /**
  * @brief Main function
