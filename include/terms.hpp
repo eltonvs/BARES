@@ -20,6 +20,8 @@
 class Terms {
  public:
  private:
+    std::string term = "";  //<! The term value
+    int col = -1;           //<! The term column on expression
 };
 
 #include "terms.inl"

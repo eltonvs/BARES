@@ -28,6 +28,34 @@ class Expression {
      */
     explicit Expression(std::string _expr = "");
 
+    /**
+     * @brief Expression Destructor
+     *
+     * Delete expression and empty all Queues
+     */
+    ~Expression();
+
+    /**
+     * @brief Convert an infix expression to posfix
+     *
+     * @return True if all succeed, False otherwise
+     */
+    bool infix2posfix();
+
+    /**
+     * @brief Calculate the Expression Result
+     *
+     * @return The Expression result
+     */
+    int calculate();
+
+    /**
+     * @brief Create a queue with all Expression tokens
+     *
+     * @return True if everything is ok, False if not
+     */
+    bool tokenize();
+
  private:
     std::string m_expr = "";      //!< A expression string
     Queue<Terms> m_terms;         //!< A Queue of expression terms
