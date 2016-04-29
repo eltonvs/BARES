@@ -4,3 +4,6 @@ build/
 
 # Ignore compiled files
 bin/
+
+# Ignore tests files
+tests*
