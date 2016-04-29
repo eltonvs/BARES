@@ -15,6 +15,7 @@
 #include <fstream>
 #include <cassert>
 #include <string>
+
 #include "stack.hpp"
 #include "queue.hpp"
 #include "terms.hpp"
@@ -40,6 +41,8 @@ int main(int argc, char const *argv[]) {
     // Verify if the files aren't opened
     if (!input.is_open() || !output.is_open()) {
         std::cerr << "The file specified cannot be opened.\n";
+        input.close();
+        output.close();
         return EXIT_FAILURE;
     }
 
