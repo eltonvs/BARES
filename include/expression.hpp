@@ -57,9 +57,9 @@ class Expression {
     bool tokenize();
 
  private:
-    std::string m_expr = "";      //!< A expression string
-    Queue<Terms> m_terms;         //!< A Queue of expression terms
-    Queue<Terms> m_terms_posfix;  //!< A Queue of expression terms (posfix)
+    std::string m_expr = "";       //!< A expression string
+    Queue<Terms> *m_terms;         //!< A pointer to a expression terms Queue
+    Queue<Terms> *m_terms_posfix;  //!< A pointer to a posfix expression Queue
 };
 
 #include "expression.inl"

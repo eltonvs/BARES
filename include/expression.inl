@@ -7,3 +7,17 @@
  */
 
 #include "expression.hpp"
+#include "terms.hpp"
+
+// Constructor
+Expression::Expression(std::string _expr) {
+    m_expr         = _expr;
+    m_terms        = new Queue<Terms>;
+    m_terms_posfix = new Queue<Terms>;
+}
+
+// Destructor
+Expression::~Expression() {
+    delete m_terms;
+    delete m_terms_posfix;
+}
