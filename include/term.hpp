@@ -41,7 +41,7 @@ class Term {
      *
      * Get the Term col
      */
-    int get_col();
+    int get_col() const;
 
     /**
      * @brief Gets the operand precedence
@@ -58,7 +58,16 @@ class Term {
      * |  / * %     |  4           |
      * |  + -       |  5           |
      */
-    int get_precedence();
+    int get_precedence() const;
+
+    /**
+     * @brief Getts the integer value from number
+     * @param _return The var to keep the returned value
+     * @return True if all succeed, False otherwise
+     *
+     * Get the number integer value
+     */
+    bool get_raw_number(int &_return) const;
 
     /**
      * @brief Verify if the term is an expression number
@@ -66,7 +75,15 @@ class Term {
      *
      * Verify if is a number
      */
-    bool is_number();
+    bool is_number() const;
+
+    /**
+     * @brief Verify if the term is a valid number
+     * @return True if is valid, False otherwise
+     *
+     * Verify if is a valid number (in range [-32.768, 32.767])
+     */
+    bool is_valid_number() const;
 
     /**
      * @brief Verify if the Term is an expression operand
@@ -74,7 +91,7 @@ class Term {
      *
      * Verify if is a operand (+, -, /, *, ^, %)
      */
-    bool is_operand();
+    bool is_operand() const;
 
     /**
      * @brief Verify if the Term is an expression operand
@@ -83,7 +100,7 @@ class Term {
      *
      * Verify if is a opening parenthesis
      */
-    bool is_opening_parenthesis();
+    bool is_opening_parenthesis() const;
 
     /**
      * @brief Verify if the Term is an coling parenthesis
@@ -92,7 +109,7 @@ class Term {
      *
      * Verify if is a closing parenthesis
      */
-    bool is_closing_parenthesis();
+    bool is_closing_parenthesis() const;
 
  private:
     std::string m_term = "";  //<! The term value
