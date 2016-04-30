@@ -50,7 +50,7 @@ bool Term::get_raw_number(int &_return) const {
 
 // Verify if the term is a number
 bool Term::is_number() const {
-    for (auto i(0u); i < m_term.size(); i++)
+    for (auto i = m_term[0] == '-' ? 1u : 0u; i < m_term.size(); i++)
         if (m_term[i] < 48 or m_term[i] > 57)
             return false;
     return true;
@@ -58,8 +58,10 @@ bool Term::is_number() const {
 
 // Verify if the term is a valid number
 bool Term::is_valid_number() const {
+    if (m_term.size() > 6)  // Verify if is a too big number
+        return false;
     int val;
-    return get_raw_number(val) and val >= -32.768 and val <= 32.767;
+    return get_raw_number(val) and val >= -32768 and val <= 32767;
 }
 
 // Verify if the term is an operand
