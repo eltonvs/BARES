@@ -36,6 +36,14 @@ class Expression {
     ~Expression();
 
     /**
+     * @brief Calculate the Expression Result
+     *
+     * @return The Expression result
+     */
+    int calculate();
+
+ private:
+    /**
      * @brief Create a queue with all Expression tokens
      *
      * @return True if everything is ok, False if not
@@ -49,14 +57,6 @@ class Expression {
      */
     bool infix2posfix();
 
-    /**
-     * @brief Calculate the Expression Result
-     *
-     * @return The Expression result
-     */
-    int calculate();
-
- private:
     std::string m_expr = "";       //!< A expression string
     Queue<Term> *m_terms;         //!< A pointer to a expression terms Queue
     Queue<Term> *m_terms_posfix;  //!< A pointer to a posfix expression Queue
