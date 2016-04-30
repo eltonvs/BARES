@@ -11,7 +11,7 @@
 
 #include <string>
 #include "queue.hpp"
-#include "terms.hpp"
+#include "term.hpp"
 
 /**
  * @brief Expression Class
@@ -36,6 +36,13 @@ class Expression {
     ~Expression();
 
     /**
+     * @brief Create a queue with all Expression tokens
+     *
+     * @return True if everything is ok, False if not
+     */
+    bool tokenize();
+
+    /**
      * @brief Convert an infix expression to posfix
      *
      * @return True if all succeed, False otherwise
@@ -49,17 +56,10 @@ class Expression {
      */
     int calculate();
 
-    /**
-     * @brief Create a queue with all Expression tokens
-     *
-     * @return True if everything is ok, False if not
-     */
-    bool tokenize();
-
  private:
     std::string m_expr = "";       //!< A expression string
-    Queue<Terms> *m_terms;         //!< A pointer to a expression terms Queue
-    Queue<Terms> *m_terms_posfix;  //!< A pointer to a posfix expression Queue
+    Queue<Term> *m_terms;         //!< A pointer to a expression terms Queue
+    Queue<Term> *m_terms_posfix;  //!< A pointer to a posfix expression Queue
 };
 
 #include "expression.inl"

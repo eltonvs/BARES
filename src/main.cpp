@@ -18,7 +18,7 @@
 
 #include "stack.hpp"
 #include "queue.hpp"
-#include "terms.hpp"
+#include "term.hpp"
 #include "expression.hpp"
 
 /**
