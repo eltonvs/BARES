@@ -36,6 +36,14 @@ class Term {
     ~Term();
 
     /**
+     * @brief Getter to m_term
+     * @return The Term
+     *
+     * Get the Term
+     */
+    std::string get_term() const;
+
+    /**
      * @brief Getter to m_col
      * @return The Term col
      *
@@ -68,6 +76,22 @@ class Term {
      * Get the number integer value
      */
     bool get_raw_number(int &_return) const;
+
+    /**
+     * @brief Sets the new term value
+     * @param _new_term The new value
+     *
+     * Sets the new m_term value
+     */
+    void set_term(std::string _new_term);
+
+    /**
+     * @brief Sets the new term col
+     * @param _new_col The new col
+     *
+     * Sets the new m_col value
+     */
+    void set_col(int _new_col);
 
     /**
      * @brief Verify if the term is an expression number

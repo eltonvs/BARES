@@ -16,6 +16,11 @@ Term::~Term() {
     m_term.clear();
 }
 
+// Gets Term
+std::string Term::get_term() const {
+    return m_term;
+}
+
 // Gets Term Column
 int Term::get_col() const {
     return m_col;
@@ -46,6 +51,16 @@ int Term::get_precedence() const {
 // Gets the number integer value
 bool Term::get_raw_number(int &_return) const {
     return is_number() ? (_return = atoi(m_term.c_str())) : false;
+}
+
+// Sets the new Term
+void Term::set_term(std::string _new_term) {
+    m_term = _new_term;
+}
+
+// Sets the new Term col
+void Term::set_col(int _new_col) {
+    m_col = _new_col;
 }
 
 // Verify if the term is a number

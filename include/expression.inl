@@ -20,3 +20,18 @@ Expression::~Expression() {
     delete m_terms;
     delete m_terms_posfix;
 }
+
+// Tokenize
+bool Expression::tokenize() {
+    return true;
+}
+
+// Calculate
+int Expression::calculate() {
+    if (tokenize()) {
+        // Do some magic here
+
+        return true;
+    }
+    return false;
+}
