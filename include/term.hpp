@@ -44,6 +44,23 @@ class Term {
     int get_col();
 
     /**
+     * @brief Gets the operand precedence
+     * @return A integer with the operand precedence
+     * @see is_operand
+     *
+     * Gets the operand precedence using that table:
+     *
+     * |  Operator  |  Precedence  |
+     * |  :------:  |  :--------:  |
+     * |  ( )       |  1           |
+     * |  - (unary) |  2           |
+     * |  ^         |  3           |
+     * |  / * %     |  4           |
+     * |  + -       |  5           |
+     */
+    int get_precedence();
+
+    /**
      * @brief Verify if the term is an expression number
      * @return True if is a number, False otherwise
      *
@@ -55,13 +72,14 @@ class Term {
      * @brief Verify if the Term is an expression operand
      * @return True if is an operand, False otherwise
      *
-     * Verify if is a operand
+     * Verify if is a operand (+, -, /, *, ^, %)
      */
     bool is_operand();
 
     /**
      * @brief Verify if the Term is an expression operand
      * @return True if is an opening parenthesus, False if not
+     * @see is_closing_parenthesis
      *
      * Verify if is a opening parenthesis
      */
@@ -70,11 +88,11 @@ class Term {
     /**
      * @brief Verify if the Term is an coling parenthesis
      * @return True if is a closing parenthesis, False if not
+     * @see is_opening_parenthesis
      *
      * Verify if is a closing parenthesis
      */
     bool is_closing_parenthesis();
-
 
  private:
     std::string m_term = "";  //<! The term value

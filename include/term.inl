@@ -16,10 +16,33 @@ Term::~Term() {
     m_term.clear();
 }
 
-// Getter Term Column
+// Gets Term Column
 int Term::get_col() {
     return m_col;
 }
+
+// Gets Term precedence
+int Term::get_precedence() {
+    if (is_operand())
+        switch(m_term[0]) {
+            case '(':
+            case ')':
+                return 1;
+            case 'u':
+                return 2;
+            case '^':
+                return 3;
+            case '*':
+            case '/':
+            case '%':
+                return 4;
+            case '+':
+            case '-':
+                return 5;
+        }
+    return -1;
+}
+
 
 // Verify if the term is a number
 bool Term::is_number() {
