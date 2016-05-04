@@ -42,6 +42,13 @@ class Expression {
      */
     int calculate();
 
+    /**
+     * @brief Temporary Method
+     *
+     * @return Just for debugging
+     */
+    void tests();
+
  private:
     /**
      * @brief Create a queue with all Expression tokens
@@ -57,7 +64,83 @@ class Expression {
      */
     bool infix2posfix();
 
-    std::string m_expr = "";       //!< A expression string
+    /**
+     * @brief Gets the operand precedence
+     * @param _t The term to be used on function
+     * @return A integer with the operand precedence
+     * @see is_operand
+     *
+     * Gets the operand precedence using that table:
+     *
+     * |  Operator  |  Precedence  |
+     * |  :------:  |  :--------:  |
+     * |  ( )       |  1           |
+     * |  - (unary) |  2           |
+     * |  ^         |  3           |
+     * |  / * %     |  4           |
+     * |  + -       |  5           |
+     */
+    int get_precedence(Term _t) const;
+
+    /**
+     * @brief Gets the integer value from a Term
+     * @param _t The term to be used on function
+     * @param _return The var to keep the returned value
+     * @return True if all succeed, False otherwise
+     *
+     * Gets the Term integer value
+     */
+    bool get_int_number(Term _t, int &_return) const;
+
+    /**
+     * @brief Verify if the term value is a number
+     * @param _t The term to be used on function
+     * @return True if is a number, False otherwise
+     *
+     * Verify if is a number
+     */
+    bool is_number(Term _t) const;
+
+    /**
+     * @brief Verify if the term value is a valid number
+     * @param _t The term to be used on function
+     * @return True if is valid, False otherwise
+     * @see is_number
+     *
+     * Verify if is a valid number (in range [-32.768, 32.767])
+     */
+    bool is_valid_number(Term _t) const;
+
+    /**
+     * @brief Verify if the Term is an expression operator
+     * @param _t The term to be used on function
+     * @return True if is an operator, False otherwise
+     *
+     * Verify if is a operator (+, -, /, *, ^, %)
+     */
+    bool is_operator(Term _t) const;
+
+    /**
+     * @brief Verify if the Term is a opening parenthesis
+     * @param _t The term to be used on function
+     * @return True if is an opening parenthesis, False if not
+     * @see is_closing_parenthesis
+     *
+     * Verify if is a opening parenthesis
+     */
+    bool is_opening_parenthesis(Term _t) const;
+
+    /**
+     * @brief Verify if the Term is an closing parenthesis
+     * @param _t The term to be used on function
+     * @return True if is a closing parenthesis, False if not
+     * @see is_opening_parenthesis
+     *
+     * Verify if is a closing parenthesis
+     */
+    bool is_closing_parenthesis(Term _t) const;
+
+    std::string m_expr = "";      //!< A expression string
     Queue<Term> *m_terms;         //!< A pointer to a expression terms Queue
     Queue<Term> *m_terms_posfix;  //!< A pointer to a posfix expression Queue
 };
