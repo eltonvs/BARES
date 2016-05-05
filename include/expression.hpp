@@ -37,10 +37,11 @@ class Expression {
 
     /**
      * @brief Calculate the Expression Result
+     * @param _return The Expression result or error message
      *
-     * @return The Expression result
+     * @return True if al succeed, False if not
      */
-    int calculate();
+    bool calculate(std::string &_return);
 
     /**
      * @brief Temporary Method
@@ -140,6 +141,8 @@ class Expression {
      */
     bool is_closing_parenthesis(Term _t) const;
 
+    int m_error_id = -1;          //!< The error code
+    int m_error_col = -1;         //!< The error code
     std::string m_expr = "";      //!< A expression string
     Queue<Term> *m_terms;         //!< A pointer to a expression terms Queue
     Queue<Term> *m_terms_posfix;  //!< A pointer to a posfix expression Queue

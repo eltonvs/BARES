@@ -26,7 +26,11 @@ bool Expression::tokenize() {
     std::cout << m_expr << std::endl;
 
     bool _was_number = false;
+    bool _was_whitespace = false;
+    bool _was_parenthesis = false;
+    bool _was_operator = false;
     int _parenthesis_diff = 0;
+    int _fst_parenthesis = -1;
 
     Term t1, t2;
     for (auto i(0u); i < m_expr.size(); i++) {
@@ -36,24 +40,34 @@ bool Expression::tokenize() {
         bool _is_operator = is_operator(t2);
         bool _is_opening_parenthesis = is_opening_parenthesis(t2);
         bool _is_closing_parenthesis = is_closing_parenthesis(t2);
+        bool _is_parenthesis = (_is_opening_parenthesis || _is_closing_parenthesis);
         bool _is_last_operand = (i == m_expr.size() - 1);
         bool _is_whitespace = (t2.value == " ");
 
         std::cout << "[" << i << "]" << (_is_last_operand ? " (last): " : ": ");
         if (_is_whitespace) {
             std::cout << "Ignoring...\n";
+            _was_whitespace = true;
+            continue;
         } else if (_is_number && !_is_operator) {
             std::cout << "Number read...";
-            if (!is_valid_number(t2)) {
-                std::cout << " But is invalid...\n";
-                std::cout << Errors::get_error_message(2, t2.col) << std::endl;
+            if (_was_number && _was_whitespace) {
+                m_error_id = 3;
+                m_error_col = t2.col;
+                std::cout << " But wasn't expected...\n";
                 return false;
             }
-            std::cout << " And is valid...\n";
             if (_was_number)
                 t1.value += t2.value;
             else
                 t1.value = t2.value, t1.col = i;
+            if (!is_valid_number(t1)) {
+                std::cout << " But is invalid...\n";
+                m_error_id = 0;
+                m_error_col = t1.col;
+                return false;
+            }
+            std::cout << " And is valid...\n";
             _was_number = true;
             if (_is_last_operand)
                 m_terms->enqueue(t1);
@@ -62,34 +76,52 @@ bool Expression::tokenize() {
                 m_terms->enqueue(t1);
                 t1.value = "";
             }
-            if (_is_opening_parenthesis) {
-                _parenthesis_diff++;
-            } else if (_is_closing_parenthesis) {
-                _parenthesis_diff--;
-            }
+            if (_parenthesis_diff == 0)
+                _fst_parenthesis = -1;
+            if (_is_parenthesis && _parenthesis_diff == 0)
+                _fst_parenthesis = t2.col;
+            if (_is_parenthesis)
+                _parenthesis_diff += _is_opening_parenthesis ? 1 : -1;
             if (_parenthesis_diff < 0) {
-                std::cout << Errors::get_error_message(4, t2.col) << std::endl;
+                m_error_id = 4;
+                m_error_col = t2.col;
                 return false;
             }
             if (!_was_number) {
                 if (t2.value == "-") {
                     t2.is_unary = true;
-                } else if (!_is_opening_parenthesis && !_is_closing_parenthesis) {
-                    std::cout << Errors::get_error_message(2, t2.col) << std::endl;
+                } else if (!_is_parenthesis && !_was_parenthesis) {
+                    m_error_id = 2;
+                    m_error_col = t2.col;
                     return false;
                 }
             }
+            if (_is_last_operand && !_is_parenthesis) {
+                m_error_id = 1;
+                m_error_col = t2.col;
+                return false;
+            }
+            if (_is_operator)
+                _was_operator = true,
+                _was_parenthesis = false;
+            else
+                _was_operator = false,
+                _was_parenthesis = true;
             m_terms->enqueue(t2);
             std::cout << "Operator read..." << std::endl;
             _was_number = false;
         } else {
-            std::cout << Errors::get_error_message(3, t2.col) << std::endl;
+            m_error_id = 3;
+            m_error_col = t2.col;
             return false;
         }
+        _was_whitespace = false;
     }
 
     if (_parenthesis_diff != 0) {
-        std::cout << Errors::get_error_message(6, 0) << std::endl;
+        m_error_id = 6;
+        m_error_col = _fst_parenthesis;
+        return false;
     }
 
     std::cout << "m_terms = " << *m_terms << std::endl;
@@ -98,13 +130,12 @@ bool Expression::tokenize() {
 }
 
 // Calculate
-int Expression::calculate() {
-    if (tokenize()) {
-        // Do some magic here
-
-        return true;
+bool Expression::calculate(std::string &_return) {
+    if (!tokenize()) {
+        _return = Errors::get_error_message(m_error_id, m_error_col);
+        return false;
     }
-    return false;
+    return true;
 }
 
 // Gets Term precedence
