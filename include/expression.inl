@@ -26,6 +26,7 @@ bool Expression::tokenize() {
     std::cout << m_expr << std::endl;
 
     bool _was_number = false;
+    int _parenthesis_diff = 0;
 
     Term t1, t2;
     for (auto i(0u); i < m_expr.size(); i++) {
@@ -33,13 +34,15 @@ bool Expression::tokenize() {
         t2.col = i;
         bool _is_number = is_number(t2);
         bool _is_operator = is_operator(t2);
+        bool _is_opening_parenthesis = is_opening_parenthesis(t2);
+        bool _is_closing_parenthesis = is_closing_parenthesis(t2);
         bool _is_last_operand = (i == m_expr.size() - 1);
+        bool _is_whitespace = (t2.value == " ");
 
         std::cout << "[" << i << "]" << (_is_last_operand ? " (last): " : ": ");
-        if (!_is_number && !_is_operator) {
+        if (_is_whitespace) {
             std::cout << "Ignoring...\n";
-            continue;
-        } else if (!_is_operator) {
+        } else if (_is_number && !_is_operator) {
             std::cout << "Number read...";
             if (!is_valid_number(t2)) {
                 std::cout << " But is invalid...\n";
@@ -54,15 +57,39 @@ bool Expression::tokenize() {
             _was_number = true;
             if (_is_last_operand)
                 m_terms->enqueue(t1);
-        } else {
+        } else if (_is_operator || _is_opening_parenthesis || _is_closing_parenthesis) {
             if (_was_number) {
                 m_terms->enqueue(t1);
                 t1.value = "";
             }
+            if (_is_opening_parenthesis) {
+                _parenthesis_diff++;
+            } else if (_is_closing_parenthesis) {
+                _parenthesis_diff--;
+            }
+            if (_parenthesis_diff < 0) {
+                std::cout << Errors::get_error_message(4, t2.col) << std::endl;
+                return false;
+            }
+            if (!_was_number) {
+                if (t2.value == "-") {
+                    t2.is_unary = true;
+                } else if (!_is_opening_parenthesis && !_is_closing_parenthesis) {
+                    std::cout << Errors::get_error_message(2, t2.col) << std::endl;
+                    return false;
+                }
+            }
             m_terms->enqueue(t2);
             std::cout << "Operator read..." << std::endl;
             _was_number = false;
+        } else {
+            std::cout << Errors::get_error_message(3, t2.col) << std::endl;
+            return false;
         }
+    }
+
+    if (_parenthesis_diff != 0) {
+        std::cout << Errors::get_error_message(6, 0) << std::endl;
     }
 
     std::cout << "m_terms = " << *m_terms << std::endl;
