@@ -47,7 +47,7 @@ class Errors {
             return _return;
         _return = m_errors[_id];
         if (_id <= 6)
-            _return += std::to_string(_col) + ".";
+            _return += std::to_string(_col + 1) + ".";
         return _return;
     }
 
