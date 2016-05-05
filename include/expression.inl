@@ -140,13 +140,13 @@ bool Expression::calculate(std::string &_return) {
 
 // Gets Term precedence
 int Expression::get_precedence(Term _t) const {
-    if (is_operator(_t))
+    if (is_operator(_t)) {
+        if (_t.value == "-" and _t.is_unary)
+            return 2;
         switch(_t.value[0]) {
             case '(':
             case ')':
                 return 1;
-            case 'u':
-                return 2;
             case '^':
                 return 3;
             case '*':
@@ -157,6 +157,7 @@ int Expression::get_precedence(Term _t) const {
             case '-':
                 return 5;
         }
+    }
     return -1;
 }
 
