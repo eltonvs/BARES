@@ -19,6 +19,7 @@
 #include "stack.hpp"
 #include "queue.hpp"
 #include "term.hpp"
+#include "errors.hpp"
 #include "expression.hpp"
 
 /**
@@ -44,6 +45,15 @@ int main(int argc, char const *argv[]) {
         input.close();
         output.close();
         return EXIT_FAILURE;
+    }
+
+    std::string line = "";
+    std::string result = "";
+    while (std::getline(input, line)) {
+        Expression expr(line);
+        expr.calculate(result);
+        output << result << "\n";
+        result = "";
     }
 
     // Close Opened files
