@@ -30,12 +30,18 @@
 int main(int argc, char const *argv[]) {
     std::ifstream input;
     std::ofstream output;
+    std::ostream *out;
 
-    if (argc > 2) {
+    if (argc >= 2) {
         input.open("data/" + std::string(argv[1]));
-        output.open("data/" + std::string(argv[2]));
+        if (argc == 2) {
+            out = &std::cout;
+        } else {
+            output_file.open("data/" + std::string(argv[2]));
+            out = &output_file;
+        }
     } else {
-        std::cerr << "No file specified. Finishing execution.\n";
+        std::cerr << "No input file specified. Finishing execution.\n";
         return EXIT_FAILURE;
     }
 
@@ -52,7 +58,7 @@ int main(int argc, char const *argv[]) {
     while (std::getline(input, line)) {
         Expression expr(line);
         expr.calculate(result);
-        output << result << "\n";
+        *out << result << "\n";
         result = "";
     }
 
