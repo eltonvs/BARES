@@ -18,7 +18,6 @@ struct Term {
     bool is_unary = false;
 
     explicit Term(std::string _val = "", int _col = -1) : value(_val), col(_col) {}
-
 };
 
 std::ostream &operator<<(std::ostream &_os, const Term &_term) {
