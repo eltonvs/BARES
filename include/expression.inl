@@ -23,6 +23,50 @@ Expression::~Expression() {
 
 // Tokenize
 bool Expression::tokenize() {
+    std::cout << m_expr << std::endl;
+
+    bool _was_number = false;
+
+    Term t1, t2;
+    for (auto i(0u); i < m_expr.size(); i++) {
+        t2.value = m_expr[i];
+        t2.col = i;
+        bool _is_number = is_number(t2);
+        bool _is_operator = is_operator(t2);
+        bool _is_last_operand = (i == m_expr.size() - 1);
+
+        std::cout << "[" << i << "]" << (_is_last_operand ? " (last): " : ": ");
+        if (!_is_number && !_is_operator) {
+            std::cout << "Ignoring...\n";
+            continue;
+        } else if (!_is_operator) {
+            std::cout << "Number read...";
+            if (!is_valid_number(t2)) {
+                std::cout << " But is invalid...\n";
+                std::cout << Errors::get_error_message(2, t2.col) << std::endl;
+                return false;
+            }
+            std::cout << " And is valid...\n";
+            if (_was_number)
+                t1.value += t2.value;
+            else
+                t1.value = t2.value, t1.col = i;
+            _was_number = true;
+            if (_is_last_operand)
+                m_terms->enqueue(t1);
+        } else {
+            if (_was_number) {
+                m_terms->enqueue(t1);
+                t1.value = "";
+            }
+            m_terms->enqueue(t2);
+            std::cout << "Operator read..." << std::endl;
+            _was_number = false;
+        }
+    }
+
+    std::cout << "m_terms = " << *m_terms << std::endl;
+
     return true;
 }
 
