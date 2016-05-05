@@ -37,8 +37,8 @@ int main(int argc, char const *argv[]) {
         if (argc == 2) {
             out = &std::cout;
         } else {
-            output_file.open("data/" + std::string(argv[2]));
-            out = &output_file;
+            output.open("data/" + std::string(argv[2]));
+            out = &output;
         }
     } else {
         std::cerr << "No input file specified. Finishing execution.\n";
