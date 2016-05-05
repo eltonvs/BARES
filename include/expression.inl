@@ -102,7 +102,7 @@ bool Expression::tokenize() {
             }
             if (_is_last_operand && !_is_parenthesis) {
                 m_error_id = 1;
-                m_error_col = t2.col;
+                m_error_col = t2.col + 1;
                 return false;
             }
             if (_is_operator)
@@ -116,7 +116,10 @@ bool Expression::tokenize() {
             _was_number = false;
         // Invalid Operand
         } else {
-            m_error_id = 2;
+            if (_was_operator)
+                m_error_id = 1;
+            else
+                m_error_id = 2;
             m_error_col = t2.col;
             return false;
         }
