@@ -54,7 +54,7 @@ bool Expression::tokenize() {
             _was_whitespace = true;
             continue;
         // Verify if the current term is a number
-        } else if (_is_number && !_is_operator) {
+        } else if (_is_number) {
             std::cout << "Number read...";
             if (_was_number && _was_whitespace) {
                 m_error_id = 3;
@@ -195,7 +195,7 @@ bool Expression::is_number(Term _t) const {
     for (auto i = _t.value[0] == '-' ? 1u : 0u; i < _t.value.size(); i++)
         if (_t.value[i] < 48 or _t.value[i] > 57)
             return false;
-    return true;
+    return true && !is_operator(_t);
 }
 
 // Verify if the Term is a valid number
