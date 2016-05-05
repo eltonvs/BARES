@@ -45,10 +45,13 @@ bool Expression::tokenize() {
         bool _is_whitespace = (t2.value == " ");
 
         std::cout << "[" << i << "]" << (_is_last_operand ? " (last): " : ": ");
+
+        // Verify if the current term is a whitespace
         if (_is_whitespace) {
             std::cout << "Ignoring...\n";
             _was_whitespace = true;
             continue;
+        // Verify if the current term is a number
         } else if (_is_number && !_is_operator) {
             std::cout << "Number read...";
             if (_was_number && _was_whitespace) {
@@ -71,7 +74,8 @@ bool Expression::tokenize() {
             _was_number = true;
             if (_is_last_operand)
                 m_terms->enqueue(t1);
-        } else if (_is_operator || _is_opening_parenthesis || _is_closing_parenthesis) {
+        // Verify if the current term is a operator or parenthesis
+        } else if (_is_operator || _is_parenthesis) {
             if (_was_number) {
                 m_terms->enqueue(t1);
                 t1.value = "";
@@ -91,7 +95,7 @@ bool Expression::tokenize() {
                 if (t2.value == "-") {
                     t2.is_unary = true;
                 } else if (!_is_parenthesis && !_was_parenthesis) {
-                    m_error_id = 2;
+                    m_error_id = 5;
                     m_error_col = t2.col;
                     return false;
                 }
@@ -110,8 +114,9 @@ bool Expression::tokenize() {
             m_terms->enqueue(t2);
             std::cout << "Operator read..." << std::endl;
             _was_number = false;
+        // Invalid Operand
         } else {
-            m_error_id = 3;
+            m_error_id = 2;
             m_error_col = t2.col;
             return false;
         }
@@ -135,6 +140,7 @@ bool Expression::calculate(std::string &_return) {
         _return = Errors::get_error_message(m_error_id, m_error_col);
         return false;
     }
+    _return = "Expression result";
     return true;
 }
 

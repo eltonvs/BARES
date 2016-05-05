@@ -32,12 +32,25 @@ int main(int argc, char const *argv[]) {
     std::ofstream output;
     std::ostream *out;
 
+    // Variables to file read
+    std::string line = "";
+    std::string result = "";
+
     if (argc >= 2) {
         input.open("data/" + std::string(argv[1]));
+        // Verify if the files aren't opened
+        if (!input.is_open()) {
+            input.close();
+            goto open_failure;
+        }
         if (argc == 2) {
             out = &std::cout;
         } else {
             output.open("data/" + std::string(argv[2]));
+            if (!output.is_open()) {
+                output.close();
+                goto open_failure;
+            }
             out = &output;
         }
     } else {
@@ -45,21 +58,10 @@ int main(int argc, char const *argv[]) {
         return EXIT_FAILURE;
     }
 
-    // Verify if the files aren't opened
-    if (!input.is_open() || !output.is_open()) {
-        std::cerr << "The file specified cannot be opened.\n";
-        input.close();
-        output.close();
-        return EXIT_FAILURE;
-    }
-
-    std::string line = "";
-    std::string result = "";
     while (std::getline(input, line)) {
         Expression expr(line);
         expr.calculate(result);
         *out << result << "\n";
-        result = "";
     }
 
     // Close Opened files
@@ -67,4 +69,9 @@ int main(int argc, char const *argv[]) {
     output.close();
 
     return EXIT_SUCCESS;
+
+    open_failure: {
+        std::cerr << "The file specified cannot be opened.\n";
+        return EXIT_FAILURE;
+    }
 }
