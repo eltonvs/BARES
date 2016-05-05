@@ -27,7 +27,8 @@ bool Expression::tokenize() {
 
     bool _was_number = false;
     bool _was_whitespace = false;
-    bool _was_parenthesis = false;
+    bool _was_opening_parenthesis = false;
+    bool _was_closing_parenthesis = false;
     bool _was_operator = false;
     int _parenthesis_diff = 0;
     int _fst_parenthesis = -1;
@@ -43,6 +44,7 @@ bool Expression::tokenize() {
         bool _is_parenthesis = (_is_opening_parenthesis || _is_closing_parenthesis);
         bool _is_last_operand = (i == m_expr.size() - 1);
         bool _is_whitespace = (t2.value == " ");
+        bool _was_parenthesis = (_was_opening_parenthesis || _was_closing_parenthesis);
 
         std::cout << "[" << i << "]" << (_is_last_operand ? " (last): " : ": ");
 
@@ -105,12 +107,25 @@ bool Expression::tokenize() {
                 m_error_col = t2.col + 1;
                 return false;
             }
-            if (_is_operator)
-                _was_operator = true,
-                _was_parenthesis = false;
-            else
-                _was_operator = false,
-                _was_parenthesis = true;
+            if (_is_opening_parenthesis && _was_closing_parenthesis) {
+                m_error_id = 3;
+                m_error_col = t2.col;
+                return false;
+            }
+            if (_is_operator) {
+                _was_operator = true;
+                _was_opening_parenthesis = false;
+                _was_closing_parenthesis = false;
+            } else {
+                _was_operator = false;
+                if (_is_opening_parenthesis) {
+                    _was_opening_parenthesis = true;
+                    _was_closing_parenthesis = false;
+                } else {
+                    _was_opening_parenthesis = false;
+                    _was_closing_parenthesis = true;
+                }
+            }
             m_terms->enqueue(t2);
             std::cout << "Operator read..." << std::endl;
             _was_number = false;
