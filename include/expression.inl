@@ -67,18 +67,19 @@ bool Expression::tokenize() {
                 m_error_col = t2.col;
                 return false;
             }
-            if (_was_number)
+            if (_was_number) {
                 t1.value += t2.value;
-            else
+            } else {
                 t1.value = t2.value, t1.col = i;
+            }
             if (!is_valid_number(t1)) {
                 m_error_id = 0;
                 m_error_col = t1.col;
                 return false;
             }
-            _was_number = true;
             if (_is_last_operand)
                 m_terms->enqueue(t1);
+            _was_number = true;
         // Verify if the current term is a operator or parenthesis
         } else if (_is_operator || _is_parenthesis) {
             if (_was_number) {
@@ -133,10 +134,7 @@ bool Expression::tokenize() {
             _was_number = false;
         // Invalid Operand
         } else {
-            if (_was_operator)
-                m_error_id = 1;
-            else
-                m_error_id = 2;
+            m_error_id = _was_operator ? 1 : 2;
             m_error_col = t2.col;
             return false;
         }
