@@ -23,16 +23,16 @@ class Errors {
     /**
      * @brief Errors Constructor
      *
-     * Do nothing
+     * Delete Constructor
      */
-    Errors() {}
+    Errors() = delete;
 
     /**
      * @brief Errors Destructor
      *
-     * Do nothing too
+     * Delete Destructor
      */
-    ~Errors() {}
+    ~Errors() = delete;
 
     /**
      * @brief Print An error message
