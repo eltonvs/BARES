@@ -13,6 +13,8 @@
 Expression::Expression(std::string _expr) : m_expr(_expr) {
     m_terms        = new Queue<Term>;
     m_terms_posfix = new Queue<Term>;
+    m_error.id     = -1;
+    m_error.col    = -1;
 }
 
 // Destructor
@@ -23,7 +25,7 @@ Expression::~Expression() {
 
 // Tokenize
 bool Expression::tokenize() {
-    std::cout << m_expr << std::endl;
+    std::cout << "expr = \"" << m_expr << "\"" << std::endl;
 
     bool _was_number = false;
     bool _was_whitespace = false;
@@ -83,12 +85,12 @@ bool Expression::tokenize() {
                 m_terms->enqueue(t1);
                 t1.value = "";
             }
-            if (_parenthesis_diff == 0)
-                _fst_parenthesis = -1;
-            if (_is_parenthesis && _parenthesis_diff == 0)
-                _fst_parenthesis = t2.col;
-            if (_is_parenthesis)
+            _fst_parenthesis = (_parenthesis_diff == 0) ? -1 : _fst_parenthesis;
+            if (_is_parenthesis) {
+                if (_parenthesis_diff == 0)
+                    _fst_parenthesis = t2.col;
                 _parenthesis_diff += _is_opening_parenthesis ? 1 : -1;
+            }
             if (_parenthesis_diff < 0) {
                 set_error(4, t2.col);
                 return false;
@@ -109,6 +111,8 @@ bool Expression::tokenize() {
                 set_error(3, t2.col);
                 return false;
             }
+            m_terms->enqueue(t2);
+            _was_number = false;
             if (_is_operator) {
                 _was_operator = true;
                 _was_opening_parenthesis = false;
@@ -123,8 +127,6 @@ bool Expression::tokenize() {
                     _was_closing_parenthesis = true;
                 }
             }
-            m_terms->enqueue(t2);
-            _was_number = false;
         // Invalid Operand
         } else {
             set_error(_was_operator ? 1 : 2, t2.col);
