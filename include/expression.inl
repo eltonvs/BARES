@@ -49,6 +49,16 @@ bool Expression::tokenize() {
         // Verify if the current term is a whitespace
         if (_is_whitespace) {
             _was_whitespace = true;
+            if (_is_last_operand) {
+                if (_was_number) {
+                    m_terms->enqueue(t1);
+                    t1.value = "";
+                } else if (!_was_closing_parenthesis) {
+                    m_error_id = 1;
+                    m_error_col = t2.col + 1;
+                    return false;
+                }
+            }
             continue;
         // Verify if the current term is a number
         } else if (_is_number) {
