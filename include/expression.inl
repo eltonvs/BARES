@@ -46,20 +46,15 @@ bool Expression::tokenize() {
         bool _is_whitespace = (t2.value == " ");
         bool _was_parenthesis = (_was_opening_parenthesis || _was_closing_parenthesis);
 
-        std::cout << "[" << i << "]" << (_is_last_operand ? " (last): " : ": ");
-
         // Verify if the current term is a whitespace
         if (_is_whitespace) {
-            std::cout << "Ignoring...\n";
             _was_whitespace = true;
             continue;
         // Verify if the current term is a number
         } else if (_is_number) {
-            std::cout << "Number read...";
             if (_was_number && _was_whitespace) {
                 m_error_id = 3;
                 m_error_col = t2.col;
-                std::cout << " But wasn't expected...\n";
                 return false;
             }
             if (_was_number)
@@ -67,12 +62,10 @@ bool Expression::tokenize() {
             else
                 t1.value = t2.value, t1.col = i;
             if (!is_valid_number(t1)) {
-                std::cout << " But is invalid...\n";
                 m_error_id = 0;
                 m_error_col = t1.col;
                 return false;
             }
-            std::cout << " And is valid...\n";
             _was_number = true;
             if (_is_last_operand)
                 m_terms->enqueue(t1);
@@ -127,7 +120,6 @@ bool Expression::tokenize() {
                 }
             }
             m_terms->enqueue(t2);
-            std::cout << "Operator read..." << std::endl;
             _was_number = false;
         // Invalid Operand
         } else {
@@ -147,14 +139,21 @@ bool Expression::tokenize() {
         return false;
     }
 
-    std::cout << "m_terms = " << *m_terms << std::endl;
+    std::cout << "infix = " << *m_terms << std::endl;
+    return true;
+}
 
+bool Expression::infix2posfix() {
     return true;
 }
 
 // Calculate
 bool Expression::calculate(std::string &_return) {
     if (!tokenize()) {
+        _return = Errors::get_error_message(m_error_id, m_error_col);
+        return false;
+    }
+    if (!infix2posfix()) {
         _return = Errors::get_error_message(m_error_id, m_error_col);
         return false;
     }
