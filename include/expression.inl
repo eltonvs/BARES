@@ -60,7 +60,7 @@ bool Expression::tokenize() {
             continue;
         // Verify if the current term is a number
         } else if (_is_number) {
-            if (_was_number && _was_whitespace) {
+            if ((_was_number && _was_whitespace) || _was_closing_parenthesis) {
                 set_error(3, t2.col);
                 return false;
             }
