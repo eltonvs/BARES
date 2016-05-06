@@ -76,6 +76,9 @@ bool Expression::tokenize() {
             if (_is_last_operand)
                 m_terms->enqueue(t1);
             _was_number = true;
+            _was_opening_parenthesis = false;
+            _was_closing_parenthesis = false;
+            _was_operator = false;
         // Verify if the current term is a operator or parenthesis
         } else if (_is_operator || _is_parenthesis) {
             if (_was_number) {
@@ -106,6 +109,10 @@ bool Expression::tokenize() {
             }
             if (_is_opening_parenthesis && _was_closing_parenthesis) {
                 set_error(3, t2.col);
+                return false;
+            }
+            if (_is_closing_parenthesis && _was_opening_parenthesis) {
+                set_error(1, t2.col);
                 return false;
             }
             if (t2.is_unary) {
