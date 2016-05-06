@@ -54,8 +54,7 @@ bool Expression::tokenize() {
                     m_terms->enqueue(t1);
                     t1.value = "";
                 } else if (!_was_closing_parenthesis) {
-                    m_error_id = 1;
-                    m_error_col = t2.col + 1;
+                    set_error(1, t2.col + 1);
                     return false;
                 }
             }
@@ -63,8 +62,7 @@ bool Expression::tokenize() {
         // Verify if the current term is a number
         } else if (_is_number) {
             if (_was_number && _was_whitespace) {
-                m_error_id = 3;
-                m_error_col = t2.col;
+                set_error(3, t2.col);
                 return false;
             }
             if (_was_number) {
@@ -73,8 +71,7 @@ bool Expression::tokenize() {
                 t1.value = t2.value, t1.col = i;
             }
             if (!is_valid_number(t1)) {
-                m_error_id = 0;
-                m_error_col = t1.col;
+                set_error(0, t1.col);
                 return false;
             }
             if (_is_last_operand)
@@ -93,27 +90,23 @@ bool Expression::tokenize() {
             if (_is_parenthesis)
                 _parenthesis_diff += _is_opening_parenthesis ? 1 : -1;
             if (_parenthesis_diff < 0) {
-                m_error_id = 4;
-                m_error_col = t2.col;
+                set_error(4, t2.col);
                 return false;
             }
             if (!_was_number) {
                 if (t2.value == "-") {
                     t2.is_unary = true;
                 } else if (!_is_parenthesis && !_was_parenthesis) {
-                    m_error_id = 5;
-                    m_error_col = t2.col;
+                    set_error(5, t2.col);
                     return false;
                 }
             }
             if (_is_last_operand && !_is_parenthesis) {
-                m_error_id = 1;
-                m_error_col = t2.col + 1;
+                set_error(1, t2.col + 1);
                 return false;
             }
             if (_is_opening_parenthesis && _was_closing_parenthesis) {
-                m_error_id = 3;
-                m_error_col = t2.col;
+                set_error(3, t2.col);
                 return false;
             }
             if (_is_operator) {
@@ -134,16 +127,14 @@ bool Expression::tokenize() {
             _was_number = false;
         // Invalid Operand
         } else {
-            m_error_id = _was_operator ? 1 : 2;
-            m_error_col = t2.col;
+            set_error(_was_operator ? 1 : 2, t2.col);
             return false;
         }
         _was_whitespace = false;
     }
 
     if (_parenthesis_diff != 0) {
-        m_error_id = 6;
-        m_error_col = _fst_parenthesis;
+        set_error(6, _fst_parenthesis);
         return false;
     }
 
@@ -158,16 +149,23 @@ bool Expression::infix2posfix() {
 // Calculate
 bool Expression::calculate(std::string &_return) {
     if (!tokenize()) {
-        _return = Errors::get_error_message(m_error_id, m_error_col);
+        _return = Errors::get_error_message(m_error.id, m_error.col);
         return false;
     }
     if (!infix2posfix()) {
-        _return = Errors::get_error_message(m_error_id, m_error_col);
+        _return = Errors::get_error_message(m_error.id, m_error.col);
         return false;
     }
     _return = "Expression result";
     return true;
 }
+
+// Sets the Error
+void Expression::set_error(const int _id, const int _col) {
+    m_error.id  = _id;
+    m_error.col = _col;
+}
+
 
 // Gets Term precedence
 int Expression::get_precedence(Term _t) const {

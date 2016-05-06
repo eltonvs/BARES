@@ -66,6 +66,15 @@ class Expression {
     bool infix2posfix();
 
     /**
+     * @brief Function to set error
+     * @param _id The error id
+     * @param _col The error col
+     *
+     * Sets the error
+     */
+    void set_error(const int _id = -1, const int _col = -1);
+
+    /**
      * @brief Gets the operand precedence
      * @param _t The term to be used on function
      * @return A integer with the operand precedence
@@ -141,8 +150,11 @@ class Expression {
      */
     bool is_closing_parenthesis(Term _t) const;
 
-    int m_error_id = -1;          //!< The error code
-    int m_error_col = -1;         //!< The error code
+    //! The error structure
+    struct {
+        int id = -1;   //!< The error code
+        int col = -1;  //!< The error code
+    } m_error;
     std::string m_expr = "";      //!< A expression string
     Queue<Term> *m_terms;         //!< A pointer to a expression terms Queue
     Queue<Term> *m_terms_posfix;  //!< A pointer to a posfix expression Queue
