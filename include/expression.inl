@@ -108,7 +108,12 @@ bool Expression::tokenize() {
                 set_error(3, t2.col);
                 return false;
             }
-            m_terms->enqueue(t2);
+            if (t2.is_unary) {
+                Term t3("-u", t2.col);
+                m_terms->enqueue(t3);
+            } else {
+                m_terms->enqueue(t2);
+            }
             _was_number = false;
             if (_is_operator) {
                 _was_operator = true;
@@ -136,6 +141,8 @@ bool Expression::tokenize() {
         set_error(6, _fst_parenthesis);
         return false;
     }
+
+    std::cout << *m_terms << "\n";
 
     return true;
 }

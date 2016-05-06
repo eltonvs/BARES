@@ -39,9 +39,10 @@ struct Term {
      * The Term Setter function
      */
     template <typename str>
-    void set(str _val = "", int _col = -1) {
+    void set(str _val = "", int _col = -1, bool _unr = false) {
         value = _val;
         col = _col;
+        is_unary = _unr;
     }
 };
 
