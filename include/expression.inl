@@ -11,16 +11,16 @@
 
 // Constructor
 Expression::Expression(std::string _expr) : m_expr(_expr) {
-    m_terms        = new Queue<Term>;
-    m_terms_posfix = new Queue<Term>;
-    m_error.id     = -1;
-    m_error.col    = -1;
+    m_terms         = new Queue<Term>;
+    m_terms_postfix = new Queue<Term>;
+    m_error.id      = -1;
+    m_error.col     = -1;
 }
 
 // Destructor
 Expression::~Expression() {
     delete m_terms;
-    delete m_terms_posfix;
+    delete m_terms_postfix;
 }
 
 // Tokenize
@@ -144,7 +144,7 @@ bool Expression::tokenize() {
     return true;
 }
 
-bool Expression::infix2posfix() {
+bool Expression::infix2postfix() {
     return true;
 }
 
@@ -154,7 +154,7 @@ bool Expression::calculate(std::string &_return) {
         _return = Errors::get_error_message(m_error.id, m_error.col);
         return false;
     }
-    if (!infix2posfix()) {
+    if (!infix2postfix()) {
         _return = Errors::get_error_message(m_error.id, m_error.col);
         return false;
     }

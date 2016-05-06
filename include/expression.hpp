@@ -59,11 +59,11 @@ class Expression {
     bool tokenize();
 
     /**
-     * @brief Convert an infix expression to posfix
+     * @brief Convert an infix expression to postfix
      *
      * @return True if all succeed, False otherwise
      */
-    bool infix2posfix();
+    bool infix2postfix();
 
     /**
      * @brief Function to set error
@@ -157,7 +157,7 @@ class Expression {
     } m_error;
     std::string m_expr = "";      //!< A expression string
     Queue<Term> *m_terms;         //!< A pointer to a expression terms Queue
-    Queue<Term> *m_terms_posfix;  //!< A pointer to a posfix expression Queue
+    Queue<Term> *m_terms_postfix;  //!< A pointer to a postfix expression Queue
 };
 
 #include "expression.inl"
