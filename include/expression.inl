@@ -25,8 +25,6 @@ Expression::~Expression() {
 
 // Tokenize
 bool Expression::tokenize() {
-    std::cout << "expr = \"" << m_expr << "\"" << std::endl;
-
     bool _was_number = false;
     bool _was_whitespace = false;
     bool _was_opening_parenthesis = false;
@@ -38,10 +36,6 @@ bool Expression::tokenize() {
     Term t1, t2;
     for (auto i(0u); i < m_expr.size(); i++) {
         t2.set(m_expr[i], i);
-        /*
-        t2.value = m_expr[i];
-        t2.col = i;
-        */
         bool _is_number = is_number(t2);
         bool _is_operator = is_operator(t2);
         bool _is_opening_parenthesis = is_opening_parenthesis(t2);
@@ -143,7 +137,6 @@ bool Expression::tokenize() {
         return false;
     }
 
-    std::cout << "infix = " << *m_terms << std::endl;
     return true;
 }
 
