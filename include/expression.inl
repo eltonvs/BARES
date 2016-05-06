@@ -37,8 +37,11 @@ bool Expression::tokenize() {
 
     Term t1, t2;
     for (auto i(0u); i < m_expr.size(); i++) {
+        t2.set(m_expr[i], i);
+        /*
         t2.value = m_expr[i];
         t2.col = i;
+        */
         bool _is_number = is_number(t2);
         bool _is_operator = is_operator(t2);
         bool _is_opening_parenthesis = is_opening_parenthesis(t2);
@@ -70,7 +73,7 @@ bool Expression::tokenize() {
             if (_was_number) {
                 t1.value += t2.value;
             } else {
-                t1.value = t2.value, t1.col = i;
+                t1.set(t2.value, i);
             }
             if (!is_valid_number(t1)) {
                 set_error(0, t1.col);

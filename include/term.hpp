@@ -30,6 +30,19 @@ struct Term {
      * The Term Constructor function
      */
     explicit Term(std::string _val = "", int _col = -1) : value(_val), col(_col) {}
+
+    /**
+     * @brief Term Setter
+     * @param _val The Term value (to fit value variable)
+     * @param _col The Term column (to fit col variable)
+     *
+     * The Term Setter function
+     */
+    template <typename str>
+    void set(str _val = "", int _col = -1) {
+        value = _val;
+        col = _col;
+    }
 };
 
 /**
