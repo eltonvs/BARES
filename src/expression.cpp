@@ -116,7 +116,7 @@ bool Expression::tokenize() {
                 return false;
             }
             if (!_was_number) {
-                if (t2.value == "-") {
+                if (t2.value == "-" && !_was_closing_parenthesis) {
                     t2.is_unary = true;
                 } else if (!_is_parenthesis && !_was_parenthesis) {
                     set_error(5, t2.col);
@@ -171,15 +171,16 @@ bool Expression::tokenize() {
 
 bool Expression::infix2postfix() {
     Stack<Term> operators;
-    Queue<Term> *cpy = m_terms;
     Term t1, t2;
     // Verify all terms on queue
-    while (!cpy->isEmpty()) {
-        cpy->dequeue(t1);
+    while (!m_terms->isEmpty()) {
+        m_terms->dequeue(t1);
         if (is_number(t1)) {
             m_terms_postfix->enqueue(t1);
         } else {
             if (operators.isEmpty()) {
+                operators.push(t1);
+            } else if (is_opening_parenthesis(t1)) {
                 operators.push(t1);
             } else if (is_closing_parenthesis(t1)) {
                 operators.top(t2);
@@ -188,13 +189,13 @@ bool Expression::infix2postfix() {
                     m_terms_postfix->enqueue(t2);
                     operators.top(t2);
                 }
+                assert(is_opening_parenthesis(t2));
                 operators.pop(t2);
             } else {
                 operators.top(t2);
-                while (get_precedence(t1) > get_precedence(t2) && !operators.isEmpty() && !is_opening_parenthesis(t2)) {
+                while (get_precedence(t1) >= get_precedence(t2) && !operators.isEmpty() && !is_opening_parenthesis(t2)) {
                     operators.pop(t2);
-                    if (!is_opening_parenthesis(t2))
-                        m_terms_postfix->enqueue(t2);
+                    m_terms_postfix->enqueue(t2);
                     operators.top(t2);
                 }
                 operators.push(t1);
@@ -204,8 +205,11 @@ bool Expression::infix2postfix() {
     // Remove remaining terms on Stack
     while (!operators.isEmpty()) {
         operators.pop(t2);
-        if (!is_opening_parenthesis(t2))
-            m_terms_postfix->enqueue(t2);
+        if (is_opening_parenthesis(t2)) {
+            set_error(6, t2.col);
+            return false;
+        }
+        m_terms_postfix->enqueue(t2);
     }
 
     std::cout << *m_terms_postfix << std::endl;
@@ -236,13 +240,12 @@ void Expression::set_error(const int _id, const int _col) {
 
 // Gets Term precedence
 int Expression::get_precedence(Term _t) const {
+    if (is_opening_parenthesis(_t) || is_closing_parenthesis(_t))
+        return 1;
     if (is_operator(_t)) {
-        if (_t.value == "-" and _t.is_unary)
+        if (_t.value == "-" && _t.is_unary)
             return 2;
-        switch(_t.value[0]) {
-            case '(':
-            case ')':
-                return 1;
+        switch (_t.value[0]) {
             case '^':
                 return 3;
             case '*':
