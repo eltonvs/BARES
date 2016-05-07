@@ -165,9 +165,6 @@ bool Expression::tokenize() {
         return false;
     }
 
-    // Debugging
-    std::cout << *m_terms << "\n";
-
     return true;
 }
 
@@ -222,9 +219,6 @@ bool Expression::infix2postfix() {
         }
         m_terms_postfix->enqueue(t2);
     }
-
-    // Debugging
-    std::cout << *m_terms_postfix << std::endl;
 
     // Delete operators Stack to avoid memory leak
     delete operators;
