@@ -387,32 +387,3 @@ bool Expression::is_opening_parenthesis(Term _t) const {
 bool Expression::is_closing_parenthesis(Term _t) const {
     return _t.value == ")";
 }
-
-// Temporary method just for debug the class Methods
-void Expression::tests() {
-    Term t1("2", 1);
-    Term t2("+", 1);
-    int aux;
-
-    assert(get_precedence(t1) == -1);
-    assert(get_precedence(t2) == 5);
-    assert(get_int_number(t1, aux) == true);
-
-    assert(aux == 2);
-    assert(get_int_number(t2, aux) == false);
-
-    assert(is_number(t1) == true);
-    assert(is_number(t2) == false);
-
-    assert(is_valid_number(t1) == true);
-    assert(is_valid_number(t2) == false);
-
-    assert(is_operator(t1) == false);
-    assert(is_operator(t2) == true);
-
-    assert(is_opening_parenthesis(t1) == false);
-    assert(is_opening_parenthesis(t2) == false);
-
-    assert(is_closing_parenthesis(t1) == false);
-    assert(is_closing_parenthesis(t2) == false);
-}

@@ -43,13 +43,6 @@ class Expression {
      */
     bool calculate(std::string &_return);
 
-    /**
-     * @brief Temporary Method
-     *
-     * @return Just for debugging
-     */
-    void tests();
-
  private:
     /**
      * @brief Create a queue with all Expression tokens
