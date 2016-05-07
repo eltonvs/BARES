@@ -197,8 +197,6 @@ bool Expression::infix2postfix() {
                         m_terms_postfix->enqueue(t2);
                     operators.top(t2);
                 }
-                if (is_opening_parenthesis(t2))
-                    operators.pop(t2);
                 operators.push(t1);
             }
         }
