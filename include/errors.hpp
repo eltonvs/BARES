@@ -58,16 +58,4 @@ class Errors {
     static std::string m_errors[9];
 };
 
-std::string Errors::m_errors[] = {
-    "Numeric constant out of range: column ",
-    "Ill-formed expression or missing term detected: column ",
-    "Invalid operand: column ",
-    "Extraneous symbol: column ",
-    "Mismatch ')': column ",
-    "Lost operator: column ",
-    "Missing closing ')' to match opening '(' at: column ",
-    "Division by zero!",
-    "Numeric overflow error!"
-};
-
 #endif

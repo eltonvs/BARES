@@ -35,6 +35,7 @@ struct Term {
      * @brief Term Setter
      * @param _val The Term value (to fit value variable)
      * @param _col The Term column (to fit col variable)
+     * @param _unr The unary term flag (to fit is_unary variable)
      *
      * The Term Setter function
      */
@@ -51,7 +52,7 @@ struct Term {
  * @param _os The std::ostream
  * @param _term The Term to be showed
  */
-std::ostream &operator<<(std::ostream &_os, const Term &_term) {
+inline std::ostream &operator<<(std::ostream &_os, const Term &_term) {
     return _os << "\"" << _term.value << "\"";
 }
 

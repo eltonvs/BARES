@@ -1,13 +1,33 @@
 /*!
- *  @file expression.inl
+ *  @file expression.cpp
  *  @brief Expression Implementations
  *  @copyright Copyright &copy; 2016. All rights reserved.
  *
  *  File with Expression Class implementations
  */
 
+#include <iostream>
+#include <cassert>
+#include <string>
+
+#include "stack.hpp"
+#include "queue.hpp"
+#include "errors.hpp"
 #include "expression.hpp"
 #include "term.hpp"
+
+// Errors Array content initialization
+std::string Errors::m_errors[] = {
+    "Numeric constant out of range: column ",
+    "Ill-formed expression or missing term detected: column ",
+    "Invalid operand: column ",
+    "Extraneous symbol: column ",
+    "Mismatch ')': column ",
+    "Lost operator: column ",
+    "Missing closing ')' to match opening '(' at: column ",
+    "Division by zero!",
+    "Numeric overflow error!"
+};
 
 // Constructor
 Expression::Expression(std::string _expr) : m_expr(_expr) {

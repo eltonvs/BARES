@@ -160,6 +160,4 @@ class Expression {
     Queue<Term> *m_terms_postfix;  //!< A pointer to a postfix expression Queue
 };
 
-#include "expression.inl"
-
 #endif
