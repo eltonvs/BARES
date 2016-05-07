@@ -45,9 +45,15 @@ class Errors {
         std::string _return = "";
         if (_id > 8)
             return _return;
+#if(_FULL_ERROR_MESSAGES_)
         _return = m_errors[_id];
         if (_id <= 6)
             _return += std::to_string(_col + 1) + ".";
+#else
+        _return = "E" + std::to_string(_id + 1);
+        if (_id <= 6)
+            _return += " " + std::to_string(_col + 1);
+#endif
         return _return;
     }
 
