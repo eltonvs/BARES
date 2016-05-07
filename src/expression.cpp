@@ -135,12 +135,7 @@ bool Expression::tokenize() {
                 set_error(1, t2.col);
                 return false;
             }
-            if (t2.is_unary) {
-                Term t3("-u", t2.col);
-                m_terms->enqueue(t3);
-            } else {
-                m_terms->enqueue(t2);
-            }
+            m_terms->enqueue(t2);
             _was_number = false;
             if (_is_operator) {
                 _was_operator = true;
