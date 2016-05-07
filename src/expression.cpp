@@ -170,6 +170,48 @@ bool Expression::tokenize() {
 }
 
 bool Expression::infix2postfix() {
+    Stack<Term> operators;
+    Queue<Term> *cpy = m_terms;
+    Term t1, t2;
+    // Verify all terms on queue
+    while (!cpy->isEmpty()) {
+        cpy->dequeue(t1);
+        if (is_number(t1)) {
+            m_terms_postfix->enqueue(t1);
+        } else {
+            if (operators.isEmpty()) {
+                operators.push(t1);
+            } else if (is_closing_parenthesis(t1)) {
+                operators.top(t2);
+                while (!is_opening_parenthesis(t2) && !operators.isEmpty()) {
+                    operators.pop(t2);
+                    m_terms_postfix->enqueue(t2);
+                    operators.top(t2);
+                }
+                operators.pop(t2);
+            } else {
+                operators.top(t2);
+                while (get_precedence(t1) > get_precedence(t2) && !operators.isEmpty() && !is_opening_parenthesis(t2)) {
+                    operators.pop(t2);
+                    if (!is_opening_parenthesis(t2))
+                        m_terms_postfix->enqueue(t2);
+                    operators.top(t2);
+                }
+                if (is_opening_parenthesis(t2))
+                    operators.pop(t2);
+                operators.push(t1);
+            }
+        }
+    }
+    // Remove remaining terms on Stack
+    while (!operators.isEmpty()) {
+        operators.pop(t2);
+        if (!is_opening_parenthesis(t2))
+            m_terms_postfix->enqueue(t2);
+    }
+
+    std::cout << *m_terms_postfix << std::endl;
+
     return true;
 }
 
