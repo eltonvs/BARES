@@ -66,6 +66,25 @@ class Expression {
     bool infix2postfix();
 
     /**
+     * @brief Apply the operator function on two terms
+     * @param _t1 The first term of operation
+     * @param _t2 The second term of operation
+     * @param _op The operator
+     * @param _rst The Term where the value will be returned
+     *
+     * @return True if all succeed, False otherwise
+     */
+    bool apply_operation(Term _t1, Term _t2, Term _op, Term &_rst);
+
+    /**
+     * @brief Get the expression result from a postfix queue
+     * @param _return The Term with the final expression result
+     *
+     * @return True if all succeed, False otherwise
+     */
+    bool get_result(Term &_return);
+
+    /**
      * @brief Function to set error
      * @param _id The error id
      * @param _col The error col

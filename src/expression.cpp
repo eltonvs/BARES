@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <cmath>
 #include <string>
 
 #include "stack.hpp"
@@ -233,16 +234,95 @@ bool Expression::infix2postfix() {
 
 // Calculate
 bool Expression::calculate(std::string &_return) {
-    if (!tokenize()) {
+    Term result;
+
+    // Try to do all operations
+    if (!tokenize() || !infix2postfix() || !get_result(result)) {
         _return = Errors::get_error_message(m_error.id, m_error.col);
         return false;
     }
-    if (!infix2postfix()) {
-        _return = Errors::get_error_message(m_error.id, m_error.col);
-        return false;
-    }
-    _return = "Expression result";
+
+    _return = result.value;
     return true;
+}
+
+bool Expression::get_result(Term &_return) {
+    Stack<Term> *operands = new Stack<Term>;
+    Term t1, t2, t3;
+
+    while (!m_terms_postfix->isEmpty()) {
+        m_terms_postfix->dequeue(t1);
+        // If is a number, push him to the operands Stack
+        if (is_number(t1)) {
+            operands->push(t1);
+        } else {
+            operands->pop(t2);
+            // If is unary, set the first term as 0
+            if (t1.is_unary) {
+                t3.value = "0";
+            } else {
+                operands->pop(t3);
+            }
+            // Try to apply operation
+            if (apply_operation(t3, t2, t1, t2)) {
+                operands->push(t2);
+            } else {
+                return false;
+            }
+        }
+    }
+
+    operands->pop(_return);
+
+    // Delete operands Stack to avoid memory leak
+    delete operands;
+
+    return true;
+}
+
+// Aplly Operation
+bool Expression::apply_operation(Term _t1, Term _t2, Term _op, Term &_rst) {
+    if (is_operator(_op)) {
+        int result, v1, v2;
+        if (!is_valid_number(_t1) || !is_valid_number(_t2)) {
+            set_error(8);
+            return false;
+        }
+        get_int_number(_t1, v1);
+        get_int_number(_t2, v2);
+        switch (_op.value[0]) {
+            case '^':
+                result = std::pow(v1, v2);
+                break;
+            case '*':
+                result = v1 * v2;
+                break;
+            case '/':
+                if (v2 == 0) {
+                    set_error(7);
+                    return false;
+                }
+                result = v1 / v2;
+                break;
+            case '%':
+                result = v1 % v2;
+                break;
+            case '+':
+                result = v1 + v2;
+                break;
+            case '-':
+                result = v1 - v2;
+                break;
+        }
+        _rst.value = std::to_string(result);
+        if (!is_valid_number(_rst)) {
+            set_error(8);
+            return false;
+        }
+        return true;
+    }
+
+    return false;
 }
 
 // Sets the Error
@@ -276,7 +356,8 @@ int Expression::get_precedence(Term _t) const {
 
 // Gets Term integer value
 bool Expression::get_int_number(Term _t, int &_return) const {
-    return is_number(_t) ? (_return = atoi(_t.value.c_str())) : false;
+    _return = atoi(_t.value.c_str());
+    return is_number(_t);
 }
 
 // Verify if the Term is a number
@@ -284,7 +365,7 @@ bool Expression::is_number(Term _t) const {
     for (auto i = _t.value[0] == '-' ? 1u : 0u; i < _t.value.size(); i++)
         if (_t.value[i] < 48 or _t.value[i] > 57)
             return false;
-    return true && !is_operator(_t);
+    return !is_operator(_t);
 }
 
 // Verify if the Term is a valid number
