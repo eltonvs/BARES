@@ -164,47 +164,57 @@ bool Expression::tokenize() {
         return false;
     }
 
+    // Debugging
     std::cout << *m_terms << "\n";
 
     return true;
 }
 
 bool Expression::infix2postfix() {
-    Stack<Term> operators;
+    Stack<Term> *operators = new Stack<Term>;
     Term t1, t2;
     // Verify all terms on queue
     while (!m_terms->isEmpty()) {
         m_terms->dequeue(t1);
+        operators->top(t2);
+        // If is a number, send to postfix queue
         if (is_number(t1)) {
             m_terms_postfix->enqueue(t1);
-        } else {
-            if (operators.isEmpty()) {
-                operators.push(t1);
-            } else if (is_opening_parenthesis(t1)) {
-                operators.push(t1);
-            } else if (is_closing_parenthesis(t1)) {
-                operators.top(t2);
-                while (!is_opening_parenthesis(t2) && !operators.isEmpty()) {
-                    operators.pop(t2);
-                    m_terms_postfix->enqueue(t2);
-                    operators.top(t2);
-                }
-                assert(is_opening_parenthesis(t2));
-                operators.pop(t2);
-            } else {
-                operators.top(t2);
-                while (get_precedence(t1) >= get_precedence(t2) && !operators.isEmpty() && !is_opening_parenthesis(t2)) {
-                    operators.pop(t2);
-                    m_terms_postfix->enqueue(t2);
-                    operators.top(t2);
-                }
-                operators.push(t1);
+        // If isn't a number and the queue is empty or is
+        // an opening parenthesis, send to operators stack
+        } else if (operators->isEmpty() || is_opening_parenthesis(t1)) {
+            // If the tokenize is right, this never should happen
+            if (is_closing_parenthesis(t1)) {
+                set_error(4, t1.col);
+                return false;
             }
+            operators->push(t1);
+        // If is a closing parenthesis, send all the operators
+        // until the opening parenthesis to postfix queue
+        } else if (is_closing_parenthesis(t1)) {
+            while (!is_opening_parenthesis(t2)) {
+                operators->pop(t2);
+                m_terms_postfix->enqueue(t2);
+                operators->top(t2);
+            }
+            assert(is_opening_parenthesis(t2));
+            operators->pop(t2);
+        // Else, remove all operators who have a minor
+        // precedence and push him to operators stack
+        } else {
+            while (get_precedence(t1) >= get_precedence(t2) &&
+                   !operators->isEmpty() && !is_opening_parenthesis(t2)) {
+                operators->pop(t2);
+                m_terms_postfix->enqueue(t2);
+                operators->top(t2);
+            }
+            operators->push(t1);
         }
     }
     // Remove remaining terms on Stack
-    while (!operators.isEmpty()) {
-        operators.pop(t2);
+    while (!operators->isEmpty()) {
+        operators->pop(t2);
+        // If the tokenize is right, this never should happen
         if (is_opening_parenthesis(t2)) {
             set_error(6, t2.col);
             return false;
@@ -212,7 +222,11 @@ bool Expression::infix2postfix() {
         m_terms_postfix->enqueue(t2);
     }
 
+    // Debugging
     std::cout << *m_terms_postfix << std::endl;
+
+    // Delete operators Stack to avoid memory leak
+    delete operators;
 
     return true;
 }
