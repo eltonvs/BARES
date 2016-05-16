@@ -123,7 +123,7 @@ bool Expression::tokenize() {
                     set_error(5, t2.col);
                     return false;
                 } else if (_was_operator && _is_closing_parenthesis) {
-                    set_error(3, t2.col);
+                    set_error(1, t2.col);
                     return false;
                 }
             }
