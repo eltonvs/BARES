@@ -299,6 +299,10 @@ bool Expression::apply_operation(Term _t1, Term _t2, Term _op, Term &_rst) {
                 result = v1 / v2;
                 break;
             case '%':
+                if (v2 == 0) {
+                    set_error(7);
+                    return false;
+                }
                 result = v1 % v2;
                 break;
             case '+':
