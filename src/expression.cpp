@@ -122,6 +122,9 @@ bool Expression::tokenize() {
                 } else if (!_is_parenthesis && !_was_parenthesis) {
                     set_error(5, t2.col);
                     return false;
+                } else if (_was_operator && _is_closing_parenthesis) {
+                    set_error(3, t2.col);
+                    return false;
                 }
             }
             if (_is_last_operand && !_is_parenthesis) {
