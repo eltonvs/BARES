@@ -184,6 +184,7 @@ bool Expression::infix2postfix() {
             // If the tokenize is right, this never should happen
             if (is_closing_parenthesis(t1)) {
                 set_error(4, t1.col);
+                delete operators;
                 return false;
             }
             operators->push(t1);
@@ -215,6 +216,7 @@ bool Expression::infix2postfix() {
         // If the tokenize is right, this never should happen
         if (is_opening_parenthesis(t2)) {
             set_error(6, t2.col);
+            delete operators;
             return false;
         }
         m_terms_postfix->enqueue(t2);
@@ -261,6 +263,7 @@ bool Expression::get_result(Term &_return) {
             if (apply_operation(t3, t2, t1, t2)) {
                 operands->push(t2);
             } else {
+                delete operands;
                 return false;
             }
         }

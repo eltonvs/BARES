@@ -18,8 +18,6 @@ Queue<Object>::Queue(const unsigned _sz) {
 // Destructor
 template <typename Object>
 Queue<Object>::~Queue() {
-    m_f = m_r = -1;
-    m_capacity = 0;
     delete[] m_queue;
 }
 
@@ -109,6 +107,9 @@ bool Queue<Object>::_double() {
     while (dequeue(aux))
         if (!copy.enqueue(aux))
             return false;
+
+    // Delete old Queue array to avoid memory leak
+    delete[] m_queue;
 
     try {
         m_queue = new Object[m_capacity * 2];

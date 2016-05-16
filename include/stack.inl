@@ -18,8 +18,6 @@ Stack<Object>::Stack(unsigned _sz) {
 // Destructor
 template <typename Object>
 Stack<Object>::~Stack() {
-    m_top      = 0;
-    m_capacity = 0;
     delete[] m_stack;
 }
 
@@ -88,6 +86,9 @@ bool Stack<Object>::_double() {
 
     while (pop(aux))
         cpStack.push(aux);
+
+    // Delete old Stack array to avoid memory leak
+    delete[] m_stack;
 
     try {
         m_stack = new Object[m_capacity * 2];
