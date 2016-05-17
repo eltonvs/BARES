@@ -72,4 +72,4 @@ This program was fully developed by **Elton de Souza Vieira**
 
 
 ## Contribute
-The source files of BARES project are available on [GitHub](https://github.com/marcielleal/BARES).
+The source files of BARES project are available on [GitHub](https://github.com/eltonvs/BARES).
